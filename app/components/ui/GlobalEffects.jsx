@@ -17,6 +17,8 @@ export default function GlobalEffects() {
       lerp: 0.08,
       duration: 1.4,
       smoothWheel: true,
+      smoothTouch: true,
+      touchMultiplier: 1.2,
       easing: (t) => Math.min(1, 1.001 - 2 ** (-10 * t))
     });
 

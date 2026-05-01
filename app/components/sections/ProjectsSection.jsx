@@ -16,19 +16,32 @@ const ProjectMiniCanvas = dynamic(() => import("@/app/components/canvas/ProjectM
   ssr: false
 });
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, isMobile }) {
   const cardRef = useRef(null);
 
-  const onMove = (event) => {
+  const applyTilt = (clientX, clientY) => {
     if (!cardRef.current) {
       return;
     }
     const rect = cardRef.current.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-    cardRef.current.style.transform = `perspective(800px) rotateX(${(-y * 12).toFixed(
+    const x = (clientX - rect.left) / rect.width - 0.5;
+    const y = (clientY - rect.top) / rect.height - 0.5;
+    const maxTilt = isMobile ? 8 : 12;
+    cardRef.current.style.transform = `perspective(800px) rotateX(${(-y * maxTilt).toFixed(
       2
-    )}deg) rotateY(${(x * 12).toFixed(2)}deg) translateY(-8px)`;
+    )}deg) rotateY(${(x * maxTilt).toFixed(2)}deg) translateY(-8px)`;
+  };
+
+  const onMove = (event) => {
+    applyTilt(event.clientX, event.clientY);
+  };
+
+  const onTouchMove = (event) => {
+    const touch = event.touches?.[0];
+    if (!touch) {
+      return;
+    }
+    applyTilt(touch.clientX, touch.clientY);
   };
 
   const resetTilt = () => {
@@ -43,6 +56,8 @@ function ProjectCard({ project }) {
       className="project-card hud-corners"
       onMouseMove={onMove}
       onMouseLeave={resetTilt}
+      onTouchMove={onTouchMove}
+      onTouchEnd={resetTilt}
       style={{
         backgroundImage: `radial-gradient(circle at 20% 20%, ${project.accent}22, transparent 50%), radial-gradient(circle at 80% 90%, ${project.accent}15, transparent 55%)`
       }}
@@ -117,7 +132,10 @@ export default function ProjectsSection() {
     return () => ctx.revert();
   }, [isMobile, setScrollProgress]);
 
-  const cards = useMemo(() => projects.map((project) => <ProjectCard key={project.id} project={project} />), []);
+  const cards = useMemo(
+    () => projects.map((project) => <ProjectCard key={project.id} project={project} isMobile={isMobile} />),
+    [isMobile]
+  );
 
   return (
     <section id="projects" ref={sectionRef} className="section-shell relative overflow-hidden">

@@ -19,19 +19,7 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="section-shell relative min-h-[100dvh] overflow-hidden">
-      {!isMobile ? (
-        <ContactTorusCanvas />
-      ) : (
-        <div
-          className="absolute inset-0 -z-10 opacity-30"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, rgba(0,240,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,240,255,0.08) 1px, transparent 1px)",
-            backgroundSize: "60px 60px",
-            animation: "scanline-move 10s linear infinite"
-          }}
-        />
-      )}
+      <ContactTorusCanvas mobile={isMobile} />
 
       <div
         ref={scopeRef}
@@ -64,17 +52,17 @@ export default function ContactSection() {
               <span className="font-mono text-[clamp(0.86rem,2.2vw,1.1rem)] tracking-[0.05em]">
                 -&gt; {item.label}
               </span>
-              <span className="link-icon font-mono text-cyan">[↗]</span>
+              <span className="link-icon font-mono text-cyan">{"[\u2197]"}</span>
             </a>
           ))}
         </div>
 
         <p className="mt-8 font-mono text-[0.72rem] uppercase tracking-[0.14em] text-muted">
-          📍 Maligaon, Guwahati 781012, Assam, India
+          Location: Maligaon, Guwahati 781012, Assam, India
         </p>
 
         <div className="mt-8 inline-flex w-max items-center gap-2 border border-rose/35 px-3 py-2 font-mono text-[0.72rem] uppercase tracking-[0.16em] text-rose [box-shadow:0_0_18px_rgba(244,63,94,0.2)]">
-          <span className="availability-dot">●</span>
+          <span className="availability-dot">{"\u25cf"}</span>
           <span>CURRENTLY AVAILABLE</span>
         </div>
       </div>

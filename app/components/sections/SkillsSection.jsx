@@ -68,19 +68,12 @@ export default function SkillsSection() {
           Systems, Languages, Tools
         </h2>
 
-        {!isMobile ? (
-          <SkillsGlobeCanvas />
-        ) : (
-          <div className="mt-8 flex flex-wrap gap-2">
-            {skillCategories.flatMap((category) =>
-              category.items.map((skill) => (
-                <span key={skill} className="skill-chip font-mono text-muted">
-                  {skill}
-                </span>
-              ))
-            )}
-          </div>
-        )}
+        <SkillsGlobeCanvas mobile={isMobile} />
+        {isMobile ? (
+          <p className="mt-3 text-center font-mono text-[0.66rem] uppercase tracking-[0.14em] text-muted">
+            Drag on globe to interact
+          </p>
+        ) : null}
 
         <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {skillCategories.map((category) => (

@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { useSafari } from "@/app/components/hooks/useSafari";
 
-function TorusWireframe() {
+function TorusWireframe({ mobile }) {
   const meshRef = useRef(null);
   const geometryRef = useRef(null);
   const materialRef = useRef(null);
@@ -27,29 +27,29 @@ function TorusWireframe() {
 
   return (
     <mesh ref={meshRef}>
-      <torusKnotGeometry ref={geometryRef} args={[8, 2.5, 128, 16]} />
+      <torusKnotGeometry ref={geometryRef} args={mobile ? [6.6, 2, 96, 12] : [8, 2.5, 128, 16]} />
       <meshBasicMaterial
         ref={materialRef}
         color="#00f0ff"
         transparent
-        opacity={0.025}
+        opacity={mobile ? 0.02 : 0.025}
         wireframe
       />
     </mesh>
   );
 }
 
-export default function ContactTorusCanvas() {
+export default function ContactTorusCanvas({ mobile = false }) {
   const isSafari = useSafari();
 
   return (
     <div className="absolute inset-0 -z-10 opacity-65">
-      <Canvas camera={{ position: [0, 0, 30], fov: 40 }} dpr={[1, 1.5]}>
+      <Canvas camera={{ position: mobile ? [0, 0, 26] : [0, 0, 30], fov: mobile ? 46 : 40 }} dpr={[1, 1.5]}>
         <Suspense fallback={null}>
-          <ambientLight intensity={0.14} />
-          <pointLight position={[8, 8, 6]} intensity={0.24} color="#00f0ff" />
-          <TorusWireframe />
-          {!isSafari ? (
+          <ambientLight intensity={mobile ? 0.16 : 0.14} />
+          <pointLight position={[8, 8, 6]} intensity={mobile ? 0.2 : 0.24} color="#00f0ff" />
+          <TorusWireframe mobile={mobile} />
+          {!mobile && !isSafari ? (
             <EffectComposer>
               <Bloom intensity={0.2} luminanceThreshold={0.72} />
             </EffectComposer>
